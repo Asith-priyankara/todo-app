@@ -37,8 +37,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username already exists");
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email already exists");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -48,7 +48,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         String token = Jwts.builder()
                 .setSubject(authentication.getName())
                 .setIssuedAt(new java.util.Date())

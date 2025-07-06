@@ -28,8 +28,8 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<ResponseTaskDTO> createTask(@RequestBody CreateTaskDTO createTaskDTO) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username).orElseThrow();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow();
 
         Task task = new Task();
         task.setTitle(createTaskDTO.getTitle());
@@ -50,8 +50,8 @@ public class TaskController {
 
     @GetMapping
     public ResponseEntity<List<ResponseTaskDTO>> getTasks() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username).orElseThrow();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow();
 
         List<Task> tasks = taskRepository.findTop5ByUserAndCompletedFalseOrderByCreatedAtDesc(user);
 
@@ -70,8 +70,8 @@ public class TaskController {
 
     @PutMapping("/{id}/complete")
     public ResponseEntity<?> completeTask(@PathVariable Long id) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username).orElseThrow();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow();
 
         Task task = taskRepository.findById(id)
                 .filter(t -> t.getUser().getId().equals(user.getId()))
